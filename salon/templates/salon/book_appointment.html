@@ -1,0 +1,41 @@
+{% extends 'salon/base.html' %}
+{% load static %}
+
+{% block content %}
+<div style="display:flex;">
+    <!-- Left Menu -->
+    <div style="width:200px; border-right:1px solid #ddd; padding:20px;">
+        <h4>Appointment</h4>
+        <ul style="list-style:none; padding:0;">
+            <li><li><a href="{% url 'salon:book_appointment' salon.id %}?service_id={{ service.id }}">Book Now</a></li></li>
+          {% if appointment %}
+        <li><a href="{% url 'salon:reschedule' appointment.id %}">Reschedule</a></li>
+        <li><a href="{% url 'salon:cancel' appointment.id %}">Cancel</a></li>
+    {% endif %}
+  </ul> 
+    </div>
+     <div style="display: flex;">
+    
+    <!-- Booking Form -->
+    <div style="flex:1; padding:20px;">
+        <h2>Book Appointment at {{ salon.name }}</h2>
+        <p><b>Selected Service:</b> {{ selected_service.name }}</p>
+         {% if messages %}
+  {% for message in messages %}
+    <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+        {{ message }}
+    </div>
+  {% endfor %}
+{% endif %}
+        <form action="{% url 'salon:book_appointment' salon_id=salon.id %}" method="post">
+
+
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn btn-primary">Confirm Booking</button>
+        </form>
+    </div>
+    
+</div>
+{% endblock %}

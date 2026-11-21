@@ -1,0 +1,117 @@
+{% extends "salon/base.html" %}
+{% load static %}
+
+{% block title %}{{ salon.name }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'salon:salon_list' %}" class="btn btn-link p-0 mb-2"></a>
+
+<!-- Salon Header -->
+<div class="d-flex align-items-center mb-3">
+  {% if salon.image %}
+    <img src="{{ salon.image.url }}" class="rounded me-3" style="width:72px;height:72px;object-fit:cover;">
+  {% else %}
+    <img src="{% static 'images/salon_bg.jpg' %}" class="rounded me-3" style="width:72px;height:72px;object-fit:cover;">
+  {% endif %}
+  <div>
+    <h3 class="mb-0">{{ salon.name }}</h3>
+    <small class="text-muted">{{ salon.area }} &middot; {{ salon.phone }}</small>
+  </div>
+</div>
+
+<!-- Selected Items -->
+{% if selected_package %}
+<div class="alert alert-success d-flex justify-content-between align-items-center">
+  <div>
+    Selected package:
+    <strong>{{ selected_package }}</strong>
+  </div>
+  <a class="btn btn-sm btn-outline-dark" href="{% url 'salon:clear_selection' salon.id %}">Clear</a>
+</div>
+{% elif selected_services %}
+<div class="alert alert-success d-flex justify-content-between align-items-center">
+  <div>
+    Selected services:
+    {% for sid in selected_services %}
+      <span class="badge bg-success me-1">ID {{ sid }}</span>
+    {% endfor %}
+  </div>
+  <a class="btn btn-sm btn-outline-dark" href="{% url 'salon:clear_selection' salon.id %}">Clear</a>
+</div>
+{% endif %}
+
+<!-- Tabs -->
+<ul class="nav nav-tabs mb-3" role="tablist">
+  <li class="nav-item"><button class="nav-link active" data-bs-toggle="tab" data-bs-target="#services" type="button">Available Services</button></li>
+  <li class="nav-item"><button class="nav-link" data-bs-toggle="tab" data-bs-target="#packages" type="button">Service Packages</button></li>
+
+</ul>
+
+<div class="tab-content">
+  <!-- Services -->
+  <div class="tab-pane fade show active" id="services" role="tabpanel">
+    <div class="row g-3">
+      {% for sv in services %}
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <div class="d-flex justify-content-between align-items-start">
+              <h6 class="mb-1">{{ sv.name }}</h6>
+              <span class="badge bg-light text-dark">{{ sv.get_category_display }}</span>
+            </div>
+            <p class="small text-muted mb-2">{{ sv.description|default:"–" }}</p>
+            <div class="mt-auto d-flex justify-content-between">
+              <span class="fw-semibold">₹ {{ sv.price }} · {{ sv.duration }}m</span>
+              <a href="{% url 'salon:select_service' salon.id sv.id %}" class="btn btn-sm btn-outline-primary">
+                {% if sv.id in selected_services %}Remove{% else %}Select{% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12"><div class="alert alert-info">No services for this salon.</div></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Packages -->
+  <div class="tab-pane fade" id="packages" role="tabpanel">
+    <div class="row g-3">
+      {% for pkg in packages %}
+      <div class="col-md-6">
+        <div class="card h-100 shadow-sm">
+          <div class="card-body d-flex flex-column">
+            <h6 class="mb-1">{{ pkg.name }}</h6>
+            <p class="small text-muted mb-2">{{ pkg.description|default:"–" }}</p>
+            <div class="small">
+              <strong>Includes:</strong>
+              <ul class="small mb-2">
+                {% for s in pkg.services.all %}
+                  <li>{{ s.name }}</li>
+                {% empty %}<li>—</li>{% endfor %}
+              </ul>
+            </div>
+            <div class="mt-auto d-flex justify-content-between">
+              <span class="fw-semibold">₹ {{ pkg.price }} · {{ pkg.duration }}m</span>
+              <a href="{% url 'salon:select_package' salon.id pkg.id %}" class="btn btn-sm btn-outline-primary">
+                {% if selected_package == pkg.id %}Selected{% else %}Choose{% endif %}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+      <div class="col-12"><div class="alert alert-info">No packages for this salon.</div></div>
+      {% endfor %}
+    </div>
+  </div>
+
+  
+
+<!-- Footer Buttons -->
+<div class="mt-4 d-flex justify-content-between">
+  <a href="{% url 'salon:salon_list' %}" class="btn btn-outline-secondary">← Back</a>
+  <a href="{% url 'salon:booking_start' salon.id %}" class="btn btn-primary">Book Appointment</a>
+</div>
+{% endblock %}

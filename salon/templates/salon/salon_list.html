@@ -1,0 +1,46 @@
+{% extends "salon/base.html" %}
+{% load static %}
+{% block title %}Salons{% endblock %}
+{% block content %}
+<h2 class="mb-3">Choose a Salon</h2>
+<p class="text-muted">
+   salons:- Open a salon to view 
+  <strong>available services</strong> and <strong>service packages</strong>.
+</p>
+
+<div class="row g-4">
+  {% for s in salons %}
+  <div class="col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      {% if s.image %}
+      <img src="{{ s.image.url }}" class="card-img-top" style="height: 180px; object-fit: cover;">
+      {% else %}
+      <img src="{% static 'images/salon_bg.jpg' %}" class="card-img-top" style="height: 180px; object-fit: cover;">
+      {% endif %}
+
+      <div class="card-body d-flex flex-column">
+        <h5 class="card-title mb-1">{{ s.name }}</h5>
+        <small class="text-muted">{{ s.area }}</small>
+        <p class="small mt-2">{{ s.description|truncatechars:100 }}</p>
+
+        {# ✅ Show hint if salon already has selections in session #}
+        {% if selections.s|stringformat:"s" in selections %}
+          <span class="badge bg-success mb-2">Has active selection</span>
+        {% endif %}
+
+        <a href="{% url 'salon:salon_detail' s.id %}" class="btn btn-outline-primary mt-auto">
+          View Services
+        </a>
+        
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info">
+      No salons yet. Admin can add salons from Django admin.
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

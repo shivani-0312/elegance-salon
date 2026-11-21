@@ -1,0 +1,69 @@
+<!-- salon/templates/salon/profile.html -->
+{% extends "salon/base.html" %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-md-4">
+    <div class="card text-center shadow-sm">
+      <div class="card-body">
+        {% if user.profile.profile_image %}
+          <img src="{{ user.profile.profile_image.url }}" class="rounded-circle mb-3" width="140" height="140">
+        {% else %}
+          <div class="bg-secondary text-white rounded-circle mb-3 d-inline-block" style="width:140px;height:140px;line-height:140px;">
+            {{ user.first_name|first|default:user.username|first|upper }}
+          </div>
+        {% endif %}
+        <h5>{{ user.get_full_name|default:user.username }}</h5>
+        <p class="text-muted">{{ user.email }}</p>
+        
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-8">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h4>Edit Profile</h4>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          {{ pform.non_field_errors }}
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label>First name</label>
+              <input class="form-control" name="first_name" value="{{ pform.initial.first_name }}">
+            </div>
+            <div class="col-md-6 mb-3">
+              <label>Last name</label>
+              <input class="form-control" name="last_name" value="{{ pform.initial.last_name }}">
+            </div>
+          </div>
+          <div class="mb-3">
+            <label>Email</label>
+            <input class="form-control" name="email" value="{{ pform.initial.email }}">
+          </div>
+
+          <div class="mb-3">
+            {{ pform.phone.label_tag }} {{ pform.phone }}
+            <div class="text-danger">{{ pform.phone.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ pform.gender.label_tag }} {{ pform.gender }}
+          </div>
+
+          <div class="mb-3">
+            {{ pform.profile_image.label_tag }} {{ pform.profile_image }}
+            <div class="text-danger">{{ pform.profile_image.errors }}</div>
+          </div>
+
+          <div class="mb-3">
+            {{ pform.bio.label_tag }} {{ pform.bio }}
+          </div>
+
+          <button class="btn btn-success" type="submit">Save changes</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

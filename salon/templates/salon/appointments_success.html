@@ -1,0 +1,8 @@
+<!-- templates/appointments/success.html -->
+{% extends 'salon/base.html' %}
+{% block content %}
+<h2>✅ Appointment Confirmed!</h2>
+<p>Your appointment has been confirmed. A confirmation email has been sent.</p>
+for <b>{{ appointment.service.name }}</b> on {{ appointment.date }} at {{ appointment.time }} is confirmed.</p>
+<a href="{% url 'salon_list' %}" class="btn btn-success">Back to Salons</a>
+{% endblock %}

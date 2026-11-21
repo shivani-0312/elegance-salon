@@ -1,0 +1,39 @@
+{% extends 'salon/base.html' %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Reschedule Appointment at {{ salon.name }}</h2>
+
+    
+    <!-- ✅ Show validation errors -->
+    {% if form.errors %}
+        <div style="color: red; margin-bottom: 10px;">
+            <ul>
+              {% for field, errors in form.errors.items %}
+                  {% for error in errors %}
+                      <li>{{ error }}</li>
+                  {% endfor %}
+              {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <!-- ✅ Reschedule form -->
+    <form method="POST">
+        {% csrf_token %}
+         {{ form.as_p }}
+        <label for="date">New Date:</label>
+        <input type="date" name="date" required><br><br>
+
+        <label for="time">New Time:</label>
+        <input type="time" name="time" required><br><br>
+        <button type="submit" style="background:#007bff; color:white; padding:8px 15px; border:none; border-radius:4px;">
+            Confirm Reschedule
+        </button>
+    </form>
+
+    <!-- ✅ Back button -->
+    <a href="javascript:history.back()" style="display:inline-block; margin-top:10px; color:#007bff; text-decoration:none;">
+       ⬅ Back
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'salon/base.html' %}
+{% block content %}
+<h2>Cancel Appointment at {{ salon.name }}</h2>
+<p>Are you sure you want to cancel your appointment?</p>
+<ul>
+    <li><strong>Salon:</strong> {{ appointment.salon.name }}</li>
+    <li><strong>Service:</strong> {{ appointment.service.name }}</li>
+    <li><strong>Date:</strong> {{ appointment.date }}</li>
+    <li><strong>Time:</strong> {{ appointment.time }}</li>
+</ul>
+<form method="post" onsubmit="return confirm('⚠️ Are you sure you want to cancel this appointment?');">
+    {% csrf_token %}
+    <button type="submit" style="background-color: red; color: white; padding: 8px 12px; border-radius: 6px;">
+        Yes, Cancel
+    </button>
+    <a href="javascript:history.back()" 
+       style="margin-left: 15px; text-decoration: none; color: blue;">
+       ⬅ Back
+    </a>
+</form>
+{% endblock %}

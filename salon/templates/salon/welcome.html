@@ -1,0 +1,23 @@
+<!-- salon/templates/salon/welcome.html -->
+{% extends "salon/base.html" %}
+{% load static %}
+{% block title %}Welcome{% endblock %}
+{% block content %}
+<div class="row align-items-center">
+  <div class="col-md-7">
+    <h1 class="display-5 fw-bold">Elegance Salon</h1>
+    <p class="lead text-muted">
+      ✨ Elegance Salon is your one-stop destination for beauty, grooming, and wellness. We offer expert hair styling,
+      skincare, bridal makeup, and spa services in a relaxing, luxurious environment. With professional stylists and
+      premium products, we redefine beauty with confidence and elegance.
+    </p>
+    <p>
+      <a class="btn btn-primary btn-lg" href="{% url 'salon:register' %}">Register</a>
+      <a class="btn btn-outline-secondary btn-lg" href="{% url 'salon:login' %}">Login</a>
+    </p>
+  </div>
+  <div class="col-md-5 text-center">
+    <img src="{% static 'images/salon.jpg' %}" alt="Salon Image" class="img-fluid rounded shadow-sm">
+  </div>
+</div>
+{% endblock %}
